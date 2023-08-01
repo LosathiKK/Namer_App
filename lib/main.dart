@@ -50,10 +50,11 @@ class MyHomePage extends StatelessWidget {
     var pair = appState.current;
 
     return Scaffold(                               //3
-      body: Column( //Column is a parameter list.                               //4
+      body: Column( //Column is a parameter list.  //4
         children: [
           const Text('A random AWESOME idea:'),    //5
-          Text(pair.asLowerCase),                  //6
+          BigCard(pair: pair),                     //6 - Text(pair.asLowerCase), -> right clicke this code & get the refactor, in the refactor menu, Select 'Extract Widget' named it 'BigCard'
+                                                       //The "Text" widget no longer refer to the whole "appState"
 
           //Adding a Button
           //Next, add a button at the bottom of the Column, right below the second Text instance.
@@ -68,6 +69,21 @@ class MyHomePage extends StatelessWidget {
         ],                                          //7
       ),
     );
+  }
+}
+
+//automatically created the new "BigCard" class
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(pair.asLowerCase);
   }
 }
 /*
