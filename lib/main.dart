@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), //this affect to the whole app 
         ),
         home: MyHomePage(),
       ),
@@ -63,8 +63,8 @@ class MyHomePage extends StatelessWidget {
               appState.getNext(); //This instead of print().
               //print('button pressed!');
             },
-            child: const Text('Next'), 
-            //It should generate a new random word pair every time you press the Next button.
+            child: const Text('Next'),
+            //It should generate a new random word pair every time you press the Next button.        
           ),
         ],                                          //7
       ),
@@ -83,7 +83,20 @@ class BigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(pair.asLowerCase);
+    //Theme and Style
+    final theme = Theme.of(context); //this code request the app's current theme with Theme.of(context)
+
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0), //Wrap with Padding - return "Text(pair.asLowerCase);" code
+        
+        child: Text(pair.asLowerCase, style: style),
+      ),
+    );
   }
 }
 /*
