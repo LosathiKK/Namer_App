@@ -47,12 +47,13 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {             //1
     var appState = context.watch<MyAppState>();    //2
+    var pair = appState.current;
 
     return Scaffold(                               //3
       body: Column( //Column is a parameter list.                               //4
         children: [
           const Text('A random AWESOME idea:'),    //5
-          Text(appState.current.asLowerCase),      //6
+          Text(pair.asLowerCase),                  //6
 
           //Adding a Button
           //Next, add a button at the bottom of the Column, right below the second Text instance.
