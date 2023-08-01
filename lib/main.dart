@@ -50,23 +50,27 @@ class MyHomePage extends StatelessWidget {
     var pair = appState.current;
 
     return Scaffold(                               //3
-      body: Column( //Column is a parameter list.  //4
-        children: [
-          const Text('A random AWESOME idea:'),    //5
-          BigCard(pair: pair),                     //6 - Text(pair.asLowerCase), -> right clicke this code & get the refactor, in the refactor menu, Select 'Extract Widget' named it 'BigCard'
-                                                       //The "Text" widget no longer refer to the whole "appState"
-
-          //Adding a Button
-          //Next, add a button at the bottom of the Column, right below the second Text instance.
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext(); //This instead of print().
-              //print('button pressed!');
-            },
-            child: const Text('Next'),
-            //It should generate a new random word pair every time you press the Next button.        
-          ),
-        ],                                          //7
+      body: Center( //wrap with center
+        child: Column( //Column is a parameter list.  //4
+          mainAxisAlignment: MainAxisAlignment.center,
+      
+          children: [
+            //const Text('A random AWESOME idea:'),    //5
+            BigCard(pair: pair),                     //6 - Text(pair.asLowerCase), -> right clicke this code & get the refactor, in the refactor menu, Select 'Extract Widget' named it 'BigCard'
+                                                         //The "Text" widget no longer refer to the whole "appState"
+            const SizedBox(height: 10), 
+            //Adding a Button
+            //Next, add a button at the bottom of the Column, right below the second Text instance.
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext(); //This instead of print().
+                //print('button pressed!');
+              },
+              child: const Text('Next'),
+              //It should generate a new random word pair every time you press the Next button.        
+            ),
+          ],                                          //7
+        ),
       ),
     );
   }
@@ -94,7 +98,11 @@ class BigCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0), //Wrap with Padding - return "Text(pair.asLowerCase);" code
         
-        child: Text(pair.asLowerCase, style: style),
+        child: Text(
+          pair.asLowerCase, 
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}", //Improve Accessibility
+          ),
       ),
     );
   }
