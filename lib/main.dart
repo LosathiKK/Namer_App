@@ -1,3 +1,5 @@
+//import 'dart:js';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,14 +55,63 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
 
-//Content of the homepage
-class MyHomePage extends StatelessWidget {
+//Add Navigation rail
+class MyHomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {             //1
-    var appState = context.watch<MyAppState>();    //2
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+//The underscore(_) at the start of _MyHomePageState makes that class private and is enforced by the compiler.
+class _MyHomePageState extends State<MyHomePage> {
+
+  var selectedIndex = 0;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              extended: false,
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.favorite),
+                  label: Text('Favorites'),
+                ),
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value) {
+                
+                setState(() {
+                  selectedIndex = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: GeneratorPage(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class GeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
     IconData icon;
@@ -70,49 +121,37 @@ class MyHomePage extends StatelessWidget {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(                               //3
-      body: Center( //wrap with center
-        child: Column( //Column is a parameter list.  //4
-          mainAxisAlignment: MainAxisAlignment.center,
-      
-          children: [
-            //const Text('A random AWESOME idea:'),    //5
-            BigCard(pair: pair),                     //6 - Text(pair.asLowerCase), -> right clicke this code & get the refactor, in the refactor menu, Select 'Extract Widget' named it 'BigCard'
-                                                         //The "Text" widget no longer refer to the whole "appState"
-            const SizedBox(height: 10), 
-            //Adding a Button
-            //Next, add a button at the bottom of the Column, right below the second Text instance.
-            //wrap the existing button in a Row
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                //Like Button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavorite();
-                  },
-                  icon: Icon(icon),
-                  label: const Text('Like'),
-                ),
-                const SizedBox(width: 10),
-
-                ElevatedButton(
-                  onPressed: () {
-                    appState.getNext(); //This instead of print().
-                    //print('button pressed!');
-                  },
-                  child: const Text('Next'),
-                  //It should generate a new random word pair every time you press the Next button. 
-                ),       
-              ],
-            ),
-          ],                                          //7
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: const Text('Like'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: const Text('Next'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
+
 
 //automatically created the new "BigCard" class
 class BigCard extends StatelessWidget {
