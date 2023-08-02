@@ -40,6 +40,20 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners(); //a method of ChangeNotifier and it's ensures that anyone watching MyAppState is notified.
   }
+
+  //Adding a functionality -> Add the business logic
+  var favorites = <WordPair>[]; //added a new property to "MyAppState" called favorites and it initialzed with an empty list[].
+
+
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
+
 }
 
 //Content of the homepage
@@ -48,6 +62,13 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {             //1
     var appState = context.watch<MyAppState>();    //2
     var pair = appState.current;
+
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
 
     return Scaffold(                               //3
       body: Center( //wrap with center
@@ -61,13 +82,30 @@ class MyHomePage extends StatelessWidget {
             const SizedBox(height: 10), 
             //Adding a Button
             //Next, add a button at the bottom of the Column, right below the second Text instance.
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext(); //This instead of print().
-                //print('button pressed!');
-              },
-              child: const Text('Next'),
-              //It should generate a new random word pair every time you press the Next button.        
+            //wrap the existing button in a Row
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                //Like Button
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: const Text('Like'),
+                ),
+                const SizedBox(width: 10),
+
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext(); //This instead of print().
+                    //print('button pressed!');
+                  },
+                  child: const Text('Next'),
+                  //It should generate a new random word pair every time you press the Next button. 
+                ),       
+              ],
             ),
           ],                                          //7
         ),
